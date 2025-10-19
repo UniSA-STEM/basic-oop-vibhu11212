@@ -7,6 +7,7 @@ Username: potvy001
 This is my own work as defined by the University's Academic Misconduct Policy.
 """
 from Asset import Asset
+import random
 
 
 class Rig:
@@ -22,44 +23,70 @@ class Rig:
         self.__level = 0
 
         def get_name(self):
-            self.__name
+            return self.__name
 
         def get_damage_counter(self):
-            self.__damage_couter
+            return self.__damage_couter
 
         def get_broken_state(self):
-            self.__broken_state
+            return self.__broken_state
 
         def set_broken_state(self, state):
             self.__broken_state = state
 
         def get_storage(self):
-            self.__storage
+            return self.__storage
 
         def get_level(self):
-            self.__level
+            return self.__level
 
         def repair(self):
-            pass
+            self.__damage_counter = 0
+            self.__broken_state = False
 
         def upgrade(self):
-            pass
+            self.__level += 1
 
-        def take_hit():
-            pass
+        def take_hit(self):
+            damage_threshold = 2 + self.__level
+            self.__damage_counter += 1
+            if self.__damage_counter >= damage_threshold:
+                self.__broken_state = True
 
         def generate_asset(self):
-            pass
+            possible_assets = [
+                Asset("CryptoToken", "Used to acquire or repair rigs"),
+                Asset("Data Spike", "Used in battles"),
+                Asset("Removable Drive", "Found in rigs and used for "
+                                         "extraction"),
+                Asset("Security Chip", "Used to encrypt or decrypt assets"),
+                Asset("Hardware Patch", "Used to upgrade rigs")
+            ]
+            new_asset = random.choice(possible_assets)
+            self.__storage.append(new_asset)
 
-        def store_to_rig(self):
-            pass
+        def store_to_rig(self, asset_name):
+            self.__storage.append(asset_name)
 
-        def release_from_rig(self):
-            pass
+        def release_from_rig(self, asset_name):
+            for asset in self.__storage:
+                if asset.get_asset_name() == asset_name and not asset.get_encrypted():
+                    self.__storage.remove(asset)
+                    return asset
+            return None
 
         def rig_condition(self):
-            # based on damage and upgrade level
-            pass
+            if not self.__broken_state:
+                return f"Broken (Level {self.__level})"
+
+            condition_names = ["Novice", "Silver", "Pristine", "Gold",
+                               "Platinum", "Diamond"]  # Level 0 to 5
+
+            if 0 <= self.__level < len(condition_names):
+                status = condition_names[self.__level]
+            else:
+                status = "Advanced"
+            return f"{status} (Level {self.__level})"
 
         def __str__(self):
             pass
