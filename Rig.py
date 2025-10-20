@@ -31,6 +31,9 @@ class Rig:
         def get_broken_state(self):
             return self.__broken_state
 
+        def set_damage_counter(self, counter):
+            self.__damage_couter = counter
+
         def set_broken_state(self, state):
             self.__broken_state = state
 
@@ -40,18 +43,28 @@ class Rig:
         def get_level(self):
             return self.__level
 
+        def set_level(self, level):
+            self.__level = level
+
+        # properties for instance attributed
+        name = property(get_name)
+        damage_counter = property(get_damage_counter, set_damage_counter)
+        broken_state = property(get_broken_state, set_broken_state)
+        storage = property(get_storage)
+        level = property(get_level, set_level)
+
         def repair(self):
-            self.__damage_counter = 0
-            self.__broken_state = False
+            self.damage_counter = 0
+            self.broken_state = False
 
         def upgrade(self):
-            self.__level += 1
+            self.level += 1
 
         def take_hit(self):
-            damage_threshold = 2 + self.__level
-            self.__damage_counter += 1
-            if self.__damage_counter >= damage_threshold:
-                self.__broken_state = True
+            damage_threshold = 2 + self.level
+            self.damage_counter += 1
+            if self.damage_counter >= damage_threshold:
+                self.broken_state = True
 
         def generate_asset(self):
             possible_assets = [
@@ -76,17 +89,17 @@ class Rig:
             return None
 
         def rig_condition(self):
-            if not self.__broken_state:
-                return f"Broken (Level {self.__level})"
+            if not self.broken_state:
+                return f"Broken (Level {self.level})"
 
             condition_names = ["Novice", "Silver", "Pristine", "Gold",
                                "Platinum", "Diamond"]  # Level 0 to 5
 
-            if 0 <= self.__level < len(condition_names):
-                status = condition_names[self.__level]
+            if 0 <= self.level < len(condition_names):
+                status = condition_names[self.level]
             else:
                 status = "Advanced"
-            return f"{status} (Level {self.__level})"
+            return f"{status} (Level {self.level})"
 
         def __str__(self):
             pass
