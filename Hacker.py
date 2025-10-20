@@ -39,7 +39,7 @@ class Hacker:
     rigs = property(get_rigs, set_rigs)
     trace_level = property(get_trace_level, set_trace_level)
 
-    def aquire_a_rig(self, rig):  # DONE
+    def acquire_a_rig(self, rig):
         if self.scan_and_remove_from_inventory("CryptoToken"):
             self.rig = rig
             print(f"{self.name} has activated rig {self.rig.name}")
@@ -54,11 +54,10 @@ class Hacker:
         return None
 
     def display_trace_warning(self):
-
         if self.trace_level > 5:
             print(
                 f"WARNING: {self.name} is exposed! Trace level is {self.trace_level}."
-                f" Risky actions are now blocked.")
+                f" Sensitive actions are now blocked. Please reduce your trace")
 
     def check_trace_threshold(self):
         if self.trace_level > 5:
@@ -166,3 +165,17 @@ class Hacker:
             if asset_to_retrieve:
                 self.inventory.append(asset_to_retrieve)
                 print(f"Retrieved '{name}' from {self.rig.name}.")
+
+    def __str__(self):
+        rig_name = self.rig.name if self.rig else "None"
+        if not self.inventory:
+            inventory_str = "Empty"
+        else:
+            inventory_str = ""
+            for asset in self.inventory:
+                inventory_str += asset.asset_name + ", "
+        return (f"--- HACKER ---\n"
+                f"Name: {self.name}\n"
+                f"Trace Level: {self.trace_level}\n"
+                f"Rig Equiped: {rig_name}\n"
+                f"Inventory: {inventory_str}\n")

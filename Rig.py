@@ -19,7 +19,7 @@ class Rig:
                           Asset("Data Spike", "Used in batles"),
                           Asset("Removable Drive", "Found in rigs and used for "
                                                    "extracton")]
-
+        self.__storage_capacity = 6
         self.__level = 0
 
     def get_name(self):
@@ -46,12 +46,19 @@ class Rig:
     def set_level(self, level):
         self.__level = level
 
+    def get_storage_capacity(self):
+        return self.__storage_capacity
+
+    def set_storage_capacity(self, value):
+        self.__storage_capacity = value
+
     # properties for instance attributed
     name = property(get_name)
     damage_counter = property(get_damage_counter, set_damage_counter)
     broken_state = property(get_broken_state, set_broken_state)
     storage = property(get_storage)
     level = property(get_level, set_level)
+    storage_capacity = property(get_storage_capacity, set_storage_capacity)
 
     def repair(self):
         if self.damage_counter > 0:
@@ -63,6 +70,9 @@ class Rig:
 
     def upgrade(self):
         self.level += 1
+        self.storage_capacity += 2
+        print(
+            f"{self.name} upgraded to Level {self.level} with storage capacity {self.storage_capacity}.")
 
     def take_hit(self):
         damage_threshold = 2 + self.level
@@ -80,10 +90,15 @@ class Rig:
             Asset("Hardware Patch", "Used to upgrade rigs")
         ]
         new_asset = random.choice(possible_assets)
-        self.__storage.append(new_asset)
+        if len(self.storage) < self.storage_capacity:
+            self.storage.append(new_asset)
 
     def store_to_rig(self, asset):  # DONE
-        self.storage.append(asset)
+        if len(self.storage) < self.storage_capacity:
+            self.storage.append(asset)
+        else:
+            print(
+                f"Storage full on {self.name}. Cannot store {asset.asset_name}")
 
     def release_from_rig(self, name):  # DONE
         for asset in self.storage:
@@ -92,18 +107,29 @@ class Rig:
                 return asset
         return None
 
-    def rig_condition(self):
-        if not self.broken_state:
-            return f"Broken (Level {self.level})"
-
-        condition_names = ["Novice", "Silver", "Pristine", "Gold",
-                           "Platinum", "Diamond"]  # Level 0 to 5
-
-        if 0 <= self.level < len(condition_names):
-            status = condition_names[self.level]
+    def get_condition(self):
+        damage_threshold = 2 + self.level
+        damage_info = f"[Hits Take:{self.damage_counter}/Max Limit:{damage_threshold}]"
+        if self.broken_state:
+            status = "Broken"
         else:
-            status = "Advanced"
-        return f"{status} (Level {self.level})"
+            condition_names = ["Novice", "Silver", "Pristine", "Gold",
+                               "Platinum", "Diamond"]  # Level 0 to 5
+
+            if 0 <= self.level < len(condition_names):
+                status = condition_names[self.level]
+            else:
+                status = "Advanced"
+        return f"{status} (Level {self.level} Damage info: {damage_info})"
 
     def __str__(self):
-        pass
+        if not self.storage:
+            stored_items_str = "Empty"
+        else:
+            stored_items_str = ""
+            for asset in self.storage:
+                stored_items_str += asset.asset_name + ", "
+        return (f"--- RIG ---\n"
+                f"Name: {self.name}\n"
+                f"Condition: {self.get_condition()}\n"
+                f"Stored Assets: {stored_items_str}\n")
