@@ -39,20 +39,27 @@ class Hacker:
         rigs = property(get_rigs, set_rigs)
         trace_level = property(get_trace_level, set_trace_level)
 
-        def aquire_a_rig(self, rig):
-            pass
+        def aquire_a_rig(self, rig): # DONE
+            if self.scan_and_remove_from_inventory("CryptoToken"):
+                self.rig = rig
+                print(f"{self.name} has activated rig {self.rig.name}")
+            else:
+                print("No Crypto Tokens")
+
+        def scan_and_remove_from_inventory(self, name): #DONE
+            for asset in self.inventory:
+                if asset.asset_name == name:
+                    self.inventory.remove(asset)
+                    return asset
+            return None
 
         def check_trace_threshold(self):
-            pass
 
         def launch_data_spike(self, other_rig):
-            pass
 
         def extract_assets(self, other_rig):
-            pass
 
         def encrypt_assets(self):
-            pass
 
         def decrypt_assets(self):
             pass
@@ -60,8 +67,16 @@ class Hacker:
         def upgrade_rigs(self):
             pass
 
-        def store_to_inventory(self):
-            pass
+        def move_to_rig(self, name):  # DONE
+            if self.rig:
+                asset_to_move = self.scan_and_remove_from_inventory(name)
+                if asset_to_move:
+                    self.rig.store_to_rig(asset_to_move)
+                    print(f"Moved '{name}' to {self.rig.name}.")
 
-        def retrieve_from_inventory(self):
-            pass
+        def retrieve_from_rig(self, name): #DONE
+            if self.rig:
+                asset_to_retrieve = self.rig.release_from_rig(name)
+                if asset_to_retrieve:
+                    self.inventory.append(asset_to_retrieve)
+                    print(f"Retrieved '{name}' from {self.rig.name}.")

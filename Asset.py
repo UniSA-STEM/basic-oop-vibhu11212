@@ -26,6 +26,11 @@ class Asset:
     def set_encrypted(self, encrypted):
         self.__encrypted = encrypted
 
+    # properties for instance attributes
+    asset_name = property(get_asset_name)
+    asset_description = property(get_asset_description)
+    encrypted = property(get_encrypted, set_encrypted)
+
     def __str__(self):
         return f"{self.__name}: {self.__description} [{self.__encrypted}]" \
             if self.get_encrypted() else f"{self.__name}: {self.__description}"

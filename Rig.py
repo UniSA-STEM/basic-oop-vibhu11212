@@ -78,13 +78,13 @@ class Rig:
             new_asset = random.choice(possible_assets)
             self.__storage.append(new_asset)
 
-        def store_to_rig(self, asset_name):
-            self.__storage.append(asset_name)
+        def store_to_rig(self, asset):  # DONE
+            self.storage.append(asset)
 
-        def release_from_rig(self, asset_name):
-            for asset in self.__storage:
-                if asset.get_asset_name() == asset_name and not asset.get_encrypted():
-                    self.__storage.remove(asset)
+        def release_from_rig(self, name):  # DONE
+            for asset in self.storage:
+                if asset.asset_name == name and not asset.encrypted:
+                    self.storage.remove(asset)
                     return asset
             return None
 
