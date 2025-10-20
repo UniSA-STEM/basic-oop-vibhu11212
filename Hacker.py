@@ -59,10 +59,56 @@ class Hacker:
 
         def extract_assets(self, other_rig):
 
-        def encrypt_assets(self):
+        def encrypt_inventory_asset(self, asset_name):  # encrypt in inventory
+            chip = self.scan_and_remove_from_inventory("Security Chip")
+            if chip:
+                for asset in self.inventory:
+                    if asset.asset_name == asset_name:
+                        asset.encrypted = True
+                        return "Encrypted"
+                self.inventory.append(chip)
+            else:
+                return "no security chip"
 
-        def decrypt_assets(self):
-            pass
+        def decrypt_inventory_asset(self, asset_name):  # decryppt in inventory
+            chip = self.scan_and_remove_from_inventory("Security Chip")
+            if chip:
+                for asset in self.inventory:
+                    if asset.asset_name == asset_name:
+                        asset.encrypted = False
+                        return "Decrypted"
+                self.inventory.append(chip)
+            else:
+                return "no security chip"
+
+        def encrypt_rig_asset(self, asset_name):  # encrypt in rig storage
+            if not self.rig:
+                return "no rig"
+            else:
+                chip = self.scan_and_remove_from_inventory("Security Chip")
+                if chip:
+                    for asset in self.rig.storage:
+                        if asset.asset_name == asset_name:
+                            asset.encrypted = True
+                            return "Encrypted"
+                    self.inventory.append(chip)
+                else:
+                    return "no security chip"
+
+        def decrypt_rig_asset(self, asset_name):  # decrypt in rig storage
+            if not self.rig:
+                return "no rig"
+            else:
+                chip = self.scan_and_remove_from_inventory("Security Chip")
+                if chip:
+                    for asset in self.rig.storage:
+                        if asset.asset_name == asset_name:
+                            asset.encrypted = False
+                            return "Decrypted"
+                    self.inventory.append(chip)
+                else:
+                    return"no security chip"
+
 
         def upgrade_rigs(self):
             pass
