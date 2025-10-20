@@ -1,6 +1,6 @@
 """
 File: Hacker.py
-Description: <A brief description of this Python module.>
+Description: <Hacker module represents a hacker class, who owns a rig and his attributes and methods are in this module
 Author: Vibhu Karthikeya Pothanaboina
 ID: 110446905
 Username: potvy001
@@ -11,8 +11,9 @@ from Rig import Rig
 
 
 class Hacker:
-"""Represents a hacker who can acquire a rig, manage assets,and perform
-actions."""
+    """Represents a hacker who can acquire a rig, manage assets,and perform
+     actions."""
+
     def __init__(self, name):
         """ Initialises a Hacker object. """
         self.__name = name
@@ -95,8 +96,8 @@ actions."""
         if self.check_trace_threshold() and self.rig:
             # Tries to get a Data Spike from the rig's storage
             if self.rig.release_from_rig("Data Spike"):
-                other_rig.take_hit()# Target rig is got hit
-                self.trace_level += 1 #Trace level increases by 1
+                other_rig.take_hit()  # Target rig is got hit
+                self.trace_level += 1  # Trace level increases by 1
                 self.display_trace_warning()
 
     def extract_assets(self, other_rig):
@@ -117,66 +118,66 @@ actions."""
                 self.display_trace_warning()
 
     def encrypt_inventory_asset(self, asset_name):
-        """Encrypts an asset in the hacker's inventory, consuming a Security Chip.""""
+        """Encrypts an asset in the hacker's inventory, consuming a Security Chip."""
         chip = self.scan_and_remove_from_inventory("Security Chip")
-        if chip:
-            for asset in self.inventory:
+        if chip:  # cheks if security chip is in inventory
+            for asset in self.inventory:  # searches asset by name
                 if asset.asset_name == asset_name:
                     asset.encrypted = True
-                    return "Encrypted"
-            self.inventory.append(chip)
+            self.inventory.append(chip)  # adds security chip back once used
+            return "Encrypted"
         else:
             return "no security chip"
 
     def decrypt_inventory_asset(self, asset_name):
-        """Decrypts an asset in the hacker's inventory,consuming a Security Chip""""
+        """Decrypts an asset in the hacker's inventory,consuming a Security Chip"""
         chip = self.scan_and_remove_from_inventory("Security Chip")
-        if chip: # cheks if security chip is in inventory
-            for asset in self.inventory: #searches asset by name
+        if chip:  # cheks if security chip is in inventory
+            for asset in self.inventory:  # searches asset by name
                 if asset.asset_name == asset_name:
                     asset.encrypted = False
-            self.inventory.append(chip) #adds security chip back once used
+            self.inventory.append(chip)  # adds security chip back once used
             return "Decrypted"
         else:
             return "no security chip"
 
     def encrypt_rig_asset(self, asset_name):
         """Encrypts an asset in the rig's storage, consuming a Security Chip."""
-        if not self.rig: # checks if rig exists
+        if not self.rig:  # checks if rig exists
             return "no rig"
         else:
             chip = self.scan_and_remove_from_inventory("Security Chip")
-            if chip: # cheks if security chip is in inventory
-                for asset in self.rig.storage: #searches asset by name
+            if chip:  # cheks if security chip is in inventory
+                for asset in self.rig.storage:  # searches asset by name
                     if asset.asset_name == asset_name:
                         asset.encrypted = True
-                self.inventory.append(chip) #adds security chip back once used
+                self.inventory.append(chip)  # adds security chip back once used
                 return "Encrypted"
             else:
                 return "no security chip"
 
     def decrypt_rig_asset(self, asset_name):
-        """Decrypts an asset in the rig's storage, consuming a Security Chip""""
-        if not self.rig: # checks if rig exists
+        """Decrypts an asset in the rig's storage, consuming a Security Chip"""
+        if not self.rig:  # checks if rig exists
             return "no rig"
         else:
             chip = self.scan_and_remove_from_inventory("Security Chip")
-            if chip: # cheks if security chip is in inventory
-                for asset in self.rig.storage: #searches asset by name
+            if chip:  # cheks if security chip is in inventory
+                for asset in self.rig.storage:  # searches asset by name
                     if asset.asset_name == asset_name:
                         asset.encrypted = False
-                self.inventory.append(chip) #adds security chip back once used
+                self.inventory.append(chip)  # adds security chip back once used
                 return "Decrypted"
             else:
                 return "no security chip"
 
     def upgrade_rigs(self):
         """Upgrades the active rig, consuming a Hardware Patch."""
-        #if statement checks is trace level is normal
+        # if statement checks is trace level is normal
         if self.check_trace_threshold():
             if self.rig and self.scan_and_remove_from_inventory(
                     "Hardware Patch"):
-                self.rig.upgrade()#upgrades rig if hardware patch exists
+                self.rig.upgrade()  # upgrades rig if hardware patch exists
                 self.trace_level += 1
                 self.display_trace_warning()
             else:
@@ -189,24 +190,25 @@ actions."""
         # if statement checks if hacker has a CryptoToken
         if self.scan_and_remove_from_inventory("CryptoToken"):
             if self.rig:
-                self.rig.repair() #calls repair method from Rig module
+                self.rig.repair()  # calls repair method from Rig module
         else:
             print(f"{self.name} has no CryptoToken to perform repairs.")
 
     def move_to_rig(self, name):
-        """Moves an asset from the hacker's inventory to the rig's storage""""
-        if self.rig: # if statement to check rig exists for hacker
+        """Moves an asset from the hacker's inventory to the rig's storage"""
+        if self.rig:  # if statement to check rig exists for hacker
             asset_to_move = self.scan_and_remove_from_inventory(name)
-            if asset_to_move: # checks if inventory has asset
-                self.rig.store_to_rig(asset_to_move) # adds asset to rig
+            if asset_to_move:  # checks if inventory has asset
+                self.rig.store_to_rig(asset_to_move)  # adds asset to rig
                 print(f"Moved '{name}' to {self.rig.name}.")
 
     def retrieve_from_rig(self, name):
         """Moves an asset from the rig's storage to the hacker's inventory"""
-        if self.rig: # if statement to check rig exists for hacker
+        if self.rig:  # if statement to check rig exists for hacker
             asset_to_retrieve = self.rig.release_from_rig(name)
-            if asset_to_retrieve: # checks if released from rig
-                self.inventory.append(asset_to_retrieve) #adds asset to inventor
+            if asset_to_retrieve:  # checks if released from rig
+                self.inventory.append(
+                    asset_to_retrieve)  # adds asset to inventor
                 print(f"Retrieved '{name}' from {self.rig.name}.")
 
     def __str__(self):

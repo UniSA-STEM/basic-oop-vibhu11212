@@ -1,6 +1,7 @@
 """
 File: Asset.py
-Description: <A brief description of this Python module.>
+Description: Asset module contains class asset to instantiate asset object
+which is used in rigs and used by hacker
 Author: Vibhu Karthikeya Pothanaboina
 ID: 110446905
 Username: potvy001

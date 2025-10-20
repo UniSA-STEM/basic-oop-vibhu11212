@@ -1,6 +1,7 @@
 """
 File: Rig.py
-Description: <A brief description of this Python module.>
+Description: Rig module, Rig is a computer object that hacker owns,
+this class instantiates that object
 Author: Vibhu Karthikeya Pothanaboina
 ID: 110446905
 Username: potvy001
@@ -75,8 +76,10 @@ class Rig:
 
     def repair(self):
         """Repairs the rig if it is damaged by resetting its state"""
+        # Checks if the rig has taken any damage
         if self.damage_counter > 0:
             self.damage_counter = 0
+            # Sets the broken state back to False
             self.broken_state = False
             print(f"{self.name} has been repaired.")
         else:
@@ -91,13 +94,16 @@ class Rig:
 
     def take_hit(self):
         """Increases the rig's damage counter by one and checks if it has become broken"""
+        # Calculates the rig's durability with current level
         damage_threshold = 2 + self.level
         self.damage_counter += 1
+        # Checks if the damage has reached or exceeded the threshold
         if self.damage_counter >= damage_threshold:
             self.broken_state = True
 
     def generate_asset(self):
         """Generates a random asset and adds it to storage if there is capacity"""
+        # a list of assets that can be generated
         possible_assets = [
             Asset("CryptoToken", "Used to acquire or repair rigs"),
             Asset("Data Spike", "Used in battles"),
@@ -106,13 +112,17 @@ class Rig:
             Asset("Security Chip", "Used to encrypt or decrypt assets"),
             Asset("Hardware Patch", "Used to upgrade rigs")
         ]
+        # Randomly selects one asset from the list
         new_asset = random.choice(possible_assets)
+        # Checks if there is available space in storage
         if len(self.storage) < self.storage_capacity:
             self.storage.append(new_asset)
 
     def store_to_rig(self, asset):
-        """Stores a given asset object in the rig's storage if there is capacity""""
+        """Stores a given asset object in the rig's storage if there is capacity"""
+        # Checks if there is available space in storage
         if len(self.storage) < self.storage_capacity:
+            # Appends the asset object to the storage list
             self.storage.append(asset)
         else:
             print(
@@ -121,7 +131,9 @@ class Rig:
     def release_from_rig(self, name):
         """Finds an asset by name, removes it from storage, and returns it if not encrypted"""
         for asset in self.storage:
+            # Checks for a name match and confirms the asset is not encrypted
             if asset.asset_name == name and not asset.encrypted:
+                # Removes the found asset from the storage list
                 self.storage.remove(asset)
                 return asset
         return None
@@ -129,14 +141,19 @@ class Rig:
     def get_condition(self):
         """Returns a string about the rig's current condition, level,
         and damage"""
-        damage_threshold = 2 + self.level
+        # Calculates the rig's maximum durability
+        damage_threshold = 2 + self.level  # 2 is taken as min hots for level 0
         damage_info = f"[Hits Take:{self.damage_counter}/Max Limit:{damage_threshold}]"
+
+        # Checks if the rig's primary state is broken
         if self.broken_state:
             status = "Broken"
         else:
+            # If not broken, determines the status name based on the rig's level
             condition_names = ["Novice", "Silver", "Pristine", "Gold",
                                "Platinum", "Diamond"]  # Level 0 to 5
 
+            # Checks if the level is within the bounds of the lis
             if 0 <= self.level < len(condition_names):
                 status = condition_names[self.level]
             else:
