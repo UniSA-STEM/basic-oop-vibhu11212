@@ -54,8 +54,12 @@ class Rig:
         level = property(get_level, set_level)
 
         def repair(self):
-            self.damage_counter = 0
-            self.broken_state = False
+            if self.damage_counter > 0:
+                self.damage_counter = 0
+                self.broken_state = False
+                print(f"{self.name} has been repaired.")
+            else:
+                print(f"{self.name} does not require any repairs.")
 
         def upgrade(self):
             self.level += 1

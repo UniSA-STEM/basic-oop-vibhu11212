@@ -39,14 +39,14 @@ class Hacker:
         rigs = property(get_rigs, set_rigs)
         trace_level = property(get_trace_level, set_trace_level)
 
-        def aquire_a_rig(self, rig): # DONE
+        def aquire_a_rig(self, rig):  # DONE
             if self.scan_and_remove_from_inventory("CryptoToken"):
                 self.rig = rig
                 print(f"{self.name} has activated rig {self.rig.name}")
             else:
                 print("No Crypto Tokens")
 
-        def scan_and_remove_from_inventory(self, name): #DONE
+        def scan_and_remove_from_inventory(self, name):  # DONE
             for asset in self.inventory:
                 if asset.asset_name == name:
                     self.inventory.remove(asset)
@@ -56,8 +56,9 @@ class Hacker:
         def display_trace_warning(self):
 
             if self.trace_level > 5:
-                print(f"WARNING: {self.name} is exposed! Trace level is {self.trace_level}."
-                      f" Risky actions are now blocked.")
+                print(
+                    f"WARNING: {self.name} is exposed! Trace level is {self.trace_level}."
+                    f" Risky actions are now blocked.")
 
         def check_trace_threshold(self):
             if self.trace_level > 5:
@@ -73,6 +74,19 @@ class Hacker:
                     self.display_trace_warning()
 
         def extract_assets(self, other_rig):
+            if self.check_trace_threshold() and self.scan_and_remove_from_inventory(
+                    "Removable Drive"):
+                if other_rig.broken_state:
+                    assets_to_extract = [asset for asset in
+                                         other_rig.storage if
+                                         not asset.encrypted]
+                    for asset in assets_to_extract:
+                        extracted = other_rig.release_from_rig(
+                            asset.asset_name)
+                        if extracted:
+                            self.inventory.append(extracted)
+                    self.trace_level += 1
+                    self.display_trace_warning()
 
         def encrypt_inventory_asset(self, asset_name):  # encrypt in inventory
             chip = self.scan_and_remove_from_inventory("Security Chip")
@@ -122,11 +136,22 @@ class Hacker:
                             return "Decrypted"
                     self.inventory.append(chip)
                 else:
-                    return"no security chip"
-
+                    return "no security chip"
 
         def upgrade_rigs(self):
-            pass
+            if self.check_trace_threshold():
+                if self.rig and self.scan_and_remove_from_inventory(
+                        "Hardware Patch"):
+                    self.rig.upgrade()
+                    self.trace_level += 1
+                    self.display_trace_warning()
+
+        def repair_rig(self):
+            if self.scan_and_remove_from_inventory("CryptoToken"):
+                if self.rig:
+                    self.rig.repair()
+            else:
+                print(f"{self.name} has no CryptoToken to perform repairs.")
 
         def move_to_rig(self, name):  # DONE
             if self.rig:
@@ -135,7 +160,7 @@ class Hacker:
                     self.rig.store_to_rig(asset_to_move)
                     print(f"Moved '{name}' to {self.rig.name}.")
 
-        def retrieve_from_rig(self, name): #DONE
+        def retrieve_from_rig(self, name):  # DONE
             if self.rig:
                 asset_to_retrieve = self.rig.release_from_rig(name)
                 if asset_to_retrieve:
