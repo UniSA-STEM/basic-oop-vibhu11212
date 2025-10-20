@@ -53,9 +53,24 @@ class Hacker:
                     return asset
             return None
 
+        def display_trace_warning(self):
+
+            if self.trace_level > 5:
+                print(f"WARNING: {self.name} is exposed! Trace level is {self.trace_level}."
+                      f" Risky actions are now blocked.")
+
         def check_trace_threshold(self):
+            if self.trace_level > 5:
+                print(f"Trace level for {self.name} is too high! ")
+                return False
+            return True
 
         def launch_data_spike(self, other_rig):
+            if self.check_trace_threshold() and self.rig:
+                if self.rig.release_from_rig("Data Spike"):
+                    other_rig.take_hit()
+                    self.trace_level += 1
+                    self.display_trace_warning()
 
         def extract_assets(self, other_rig):
 
